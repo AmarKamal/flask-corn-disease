@@ -1,0 +1,42 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corn Leaf Classifier</title>
+</head>
+<body>
+    <h1>Corn Leaf Classifier</h1>
+    <form id="upload-form" action="/classify" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".jpg, .jpeg, .png" required>
+        <button type="submit">Classify</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        // Use jQuery to handle form submission
+        $('#upload-form').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '/classify',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status === 'unhealthy') {
+                        alert('Leaf is unhealthy! Redirecting to disease page.');
+                        window.location.href = '/disease';
+                    } else {
+                        alert('Leaf is healthy!');
+                    }
+                },
+            });
+        });
+    </script>
+</body>
+</html>
